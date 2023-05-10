@@ -1,11 +1,64 @@
 version: '3.7'
 
+volumes:
+  prometheus_data:
+  grafana_data:
+
 services:
+  application:
+      container_name: pismo-web-app
+      build:
+        context: .
+      image: pismo-web-app:latest
+      ports:
+        - "8080:8080"
+      depends_on:
+        - database
 
   database:
+    container_name: pismo-database
     image: postgres:alpine3.17
     restart: always
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: pismo
+      POSTGRES_PASSWORD: pismo@2023!!
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d/:ro
+
+  database-web-ui:
+    container_name: pismo-database-web-ui
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+
+  prometheus:
+    container_name: pismo-prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+      - "14268:14268"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - LOG_LEVEL=debug

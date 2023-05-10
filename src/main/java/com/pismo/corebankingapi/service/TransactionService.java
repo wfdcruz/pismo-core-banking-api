@@ -1,30 +1,39 @@
 package com.pismo.corebankingapi.service;
 
-import com.pismo.corebankingapi.entity.Account;
-import com.pismo.corebankingapi.exception.accounts.AccountNotFoundException;
-import com.pismo.corebankingapi.repository.AccountRepository;
+import com.pismo.corebankingapi.entity.Transaction;
+import com.pismo.corebankingapi.repository.TransactionPageableRepository;
+import com.pismo.corebankingapi.repository.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
+import com.pismo.corebankingapi.exception.ResourceNotFoundException;
+
 
 @Service
 @Slf4j
-public class AccountService {
+public class TransactionService {
 
-    private AccountRepository repository;
+    private final TransactionRepository repository;
+    private final TransactionPageableRepository pageableRepository;
 
     @Autowired
-    public AccountService(AccountRepository repository) {
+    public TransactionService(TransactionRepository repository, TransactionPageableRepository pageableRepository) {
         this.repository = repository;
+        this.pageableRepository = pageableRepository;
     }
 
-    public Mono<Account> createAccount(Account account) {
-        return repository.save(account);
+    //TODO: handle others exceptions like a could not execute statement; SQL [n/a]; constraint [fk_accounts_id]
+    public Transaction createTransaction(Transaction transaction) {
+        return repository.save(transaction);
     }
 
-    public Mono<Account> getAccount(Long accountId) {
-        return repository.findById(accountId)
-                .switchIfEmpty(Mono.error(new AccountNotFoundException()));
+    public Transaction getTransaction(Long transactionId) {
+        return repository.findById(transactionId).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    public Page<Transaction> getPageOfTransactions(Pageable p) {
+        return pageableRepository.findAll(p);
     }
 }
