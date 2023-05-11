@@ -20,7 +20,7 @@ public class AccountService {
         this.repository = repository;
     }
 
-    public Account createAccount(Account account) {
+    public Account save(Account account) {
         return repository.save(account);
     }
 

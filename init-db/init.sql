@@ -1,6 +1,7 @@
 create table accounts (
    account_id bigserial primary key not null,
-   document_number varchar(12) not null
+   document_number varchar(12) not null,
+   credit_limit numeric (15,2) not null
 );
 
 create table operation_types (
@@ -20,8 +21,8 @@ create table transactions(
         references operation_types (operation_type_id)
 );
 
-insert into accounts(document_number) values
-('99999999999');
+insert into accounts(document_number, credit_limit) values
+('99999999999', 5000.0);
 
 insert into operation_types(description) values
 ('COMPRA_A_VISTA'),
@@ -34,3 +35,6 @@ insert into transactions(account_id, operation_type_id, amount, event_date) valu
 (1,1,-23.5, current_timestamp),
 (1,1,-18.7, current_timestamp),
 (1,4, 60.0, current_timestamp);
+
+
+select * from accounts;

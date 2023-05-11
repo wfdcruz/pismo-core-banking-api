@@ -3,7 +3,6 @@ package com.pismo.corebankingapi.service;
 import com.pismo.corebankingapi.entity.Account;
 import com.pismo.corebankingapi.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 
 import java.util.Optional;
@@ -19,7 +18,7 @@ class AccountServiceTest {
     @Test
     void itShouldCreateAccountWithSuccess() {
         Account acc = Mockito.mock(Account.class);
-        service.createAccount(acc);
+        service.save(acc);
 
         verify(repository).save(Mockito.any());
     }
