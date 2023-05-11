@@ -7,6 +7,8 @@ import com.pismo.corebankingapi.dto.response.AccountResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,8 +24,10 @@ public class Account {
     private Long accountId;
     private String documentNumber;
 
+    private BigDecimal creditLimit;
+
     public AccountResponse toResponse() {
-        return new AccountResponse(this.accountId, this.documentNumber);
+        return new AccountResponse(this.accountId, this.documentNumber, this.creditLimit);
     }
 
 }

@@ -32,8 +32,12 @@ public class AccountController {
     AccountResponse createAccount(@Valid @RequestBody AccountRequest dto) {
         Account.AccountBuilder builder = Account.builder();
 
-        Account acc = builder.documentNumber(dto.getDocumentNumber()).build();
-        return service.createAccount(acc).toResponse();
+        Account acc = builder
+                .documentNumber(dto.getDocumentNumber())
+                .creditLimit(dto.getCreditLimit())
+                .build();
+
+        return service.save(acc).toResponse();
     }
 
 }
