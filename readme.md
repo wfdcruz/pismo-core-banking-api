@@ -1,5 +1,12 @@
 # Pismo core banking api
 
+This application was building for handle https request to created bank accounts and transations. As a HTTP API the endpoints available are:
+ - GET /accounts/{accountId} - Fetch an account by id
+ - POST /acconts - Create new account
+ - POST /transactions - Create new transaction
+
+More details at swagger link at end of this file.
+
 To execute this application you can run by command line, executing the commands below
 
 ### Requirements
